@@ -1,15 +1,16 @@
 {
-  "name": "growingiodoc",
+  "name": "elephant",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "description": "FrontEnd Document Builder",
+  "main": "elephant.js",
+  "author": "Mark Stock",
   "license": "ISC",
   "bin": {
-    "elephant": "gulp"
+    "elephant": "node elephant.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markstock7/elephant"
   },
   "devDependencies": {
     "browserify": "^13.1.1",
