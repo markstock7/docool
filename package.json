@@ -1,16 +1,16 @@
 {
-  "name": "elephant",
+  "name": "docool",
   "version": "1.0.0",
   "description": "FrontEnd Document Builder",
-  "main": "elephant.js",
-  "author": "Mark Stock",
+  "main": "docool.js",
+  "author": "markstock7",
   "license": "ISC",
   "bin": {
-    "elephant": "node elephant.js"
+    "elephant": "node docool.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/markstock7/elephant"
+    "url": "https://github.com/markstock7/docool"
   },
   "devDependencies": {
     "browserify": "^13.1.1",
