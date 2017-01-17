@@ -1,0 +1,89 @@
+{
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true,
+      experimentalObjectRestSpread: true
+    },
+    "sourceType": "module",
+  },
+  "env": {
+    "browser": true,
+    "mocha": true
+  },
+  "plugins": [
+    "react"
+  ],
+
+  // Rewrite airbnb style
+  "rules": {
+    // 允许多余的行内空格
+    "no-multi-spaces": 0,
+
+    // 每行最大字符长度扩展到800, 这个不能改了！
+    "max-len": ["error", 800, 4, {"ignoreUrls": true}],
+
+    "jsx-quotes": ["error", "prefer-single"],
+
+    // 允许var 声明变量
+    "no-var": 0,
+
+    // 未初始化变量只能用一个var进行声明，
+    "one-var": 0,
+
+    "one-var-declaration-per-line": 0,
+
+    // 允许变量覆盖
+    "no-shadow": 0,
+
+    "no-param-reassign": 0,
+
+    "arrow-body-style": 0,
+
+    prefer-const: 0,
+
+    comma-dangle: ["error", "never"],
+
+    no-underscore-dangle: 0,
+
+    "react/sort-comp" : 0,
+    // 暂时运行大写的非构造函数
+    new-cap: 0,
+
+    // 允许一个文件中定义多个component
+    "react/no-multi-comp": 0,
+
+    "react/prop-types": 0,
+
+    // 不允许存在 console, 关闭
+    "no-console": 0,
+
+    "react/jsx-no-bind": 0,
+
+    "react/prefer-stateless-function": 0,
+
+    "prefer-template": 0,
+
+    "no-use-before-define": 0,
+
+    "react/prefer-es6-class": 0,
+
+    "spaced-comment": 0,
+
+    "key-spacing": 0,
+
+    "prefer-arrow-callback": 0,
+
+    "no-constant-condition": 0
+  },
+
+  // 忽略对全局 variable 的检查 [ Promise ]
+  "globals": {
+    "Promise": true,
+    "can": true,
+    __DEV__: true
+  },
+
+  "no-nested-ternary": 0
+}

@@ -1,0 +1,9 @@
+{% extends 'shared/layout.html' %}
+
+{% block content %}
+<section class="elephant-doclet">
+     {% if doclet.kind === 'component' %}
+        {% include "doclet/component.html" ignore missing %}
+     {% endif %}
+</section>
+{% endblock %}

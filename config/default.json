@@ -1,0 +1,12 @@
+{
+    "demoGulpSrc": ["examples/**/*.jsx", "examples/**/*.md", "!**/node_modules/**"],
+
+    "gulpSrc": [],
+
+    "plugins": ["react.plugin.js", "logger.js"],
+
+    "server": {
+        "template": "",
+        "port": 3000
+    }
+}

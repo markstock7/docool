@@ -1,0 +1,25 @@
+.elephant-side-nav.nav .active>a,
+.elephant-side-nav.nav .active:hover>a,
+.elephant-side-nav.nav .active:focus>a {
+    padding-left: 18px;
+    font-weight: 700;
+    color: #563d7c;
+    background-color: transparent;
+    border-left: 2px solid #563d7c;
+}
+
+.elephant-side-nav.nav li>a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+}
+
+.elephant-side-nav.nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: 400;
+}

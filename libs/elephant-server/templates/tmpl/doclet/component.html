@@ -1,0 +1,55 @@
+<header class="elephant-doclet__header">
+    <h2 class="elephant-doclet__title">
+        {{ doclet.name }}
+    </h2>
+
+    {% if doclet.author && doclet.author.length %}
+    <div class="elephant-doclet__authors markdown">
+        <h3>Author</h3>
+        {% for a in doclet.author %}
+            <p>{{ a }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="elephant-doclet__description markdown">
+        <p>{{ doclet.classdesc }}</p>
+    </div>
+    {% if doclet.examples && doclet.examples.length %}
+        <div class="elephant-doclet__example markdown">
+            <h3>Example</h2>
+            <pre><code>{{ doclet.examples }}</code></pre>
+        </div>
+    {% endif %}
+</header>
+
+<script type="text/javascript">
+    {{ doclet.script | raw }}
+</script>
+
+<div class="markdown elephant-doclet__props">
+    <h3>{{ doclet.name }} Props</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Default Value</th>
+                <th>Is Required</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prop in doclet.props %}
+                <tr>
+                    <td>{{ prop.name }}</td>
+                    <td>{{ prop.description }}</td>
+                    <td>{{ prop.type }}</td>
+                    <td>{{ prop.default }}</td>
+                    <td>{{ prop.required }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>

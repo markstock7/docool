@@ -1,0 +1,79 @@
+<link type="text/css" rel="stylesheet" href="/static/styles/nav.css">
+<ul class="nav nav-stacked elephant-side-nav" >
+    {% if nav.modules && nav.modules.length %}
+        <li>
+            <a href="/doc/modules/list">Modules</a>
+            <ul class="nav">
+                {% for module in nav.modules %}
+                    <li>
+                        <a href="/doc/module/{{ module.name }}">{{ module.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+
+    {% if nav.classes && nav.classes.length %}
+        <li><a href="/doc/classes/list">Classes</a></li>
+         <ul class="nav">
+            {% for classe in nav.classes %}
+                <li>
+                    <a href="/doc/class/{{ classe.name }}">{{ classe.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if nav.components && nav.components.length %}
+        <li><a href="/doc/components/list">Components</a></li>
+         <ul class="nav">
+            {% for component in nav.components %}
+                <li>
+                    <a href="/doc/component/{{ component.name }}">{{ component.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if nav.namespaces && nav.namespaces.length %}
+        <li><a href="/doc/namespaces/list">Namespaces</a></li>
+         <ul class="nav">
+            {% for namespace in nav.namespaces %}
+                <li><a href="/doc/namespace/{{ namespace.name }}">{{ namespace.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if nav.minixs && nav.minixs.length %}
+        <li><a href="/doc/minixs/list">Minixs</a></li>
+         <ul class="nav">
+            {% for minix in nav.minixs %}
+                <li>
+                    <a href="/doc/minix/{{ minix.name }}">{{ minix.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if nav.interfaces && nav.interfaces.length %}
+        <li><a href="/doc/interfaces/list">Interfaces</a></li>
+         <ul class="nav">
+            {% for interface in nav.interfaces %}
+                <li>
+                    <a href="/doc/interface/{{ interface.name }}">{{ interface.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if nav.globals && nav.globals.length %}
+        <li><a href="/doc/globals/list">Global</a></li>
+         <ul class="nav">
+            {% for global in nav.globals %}
+                <li>
+                    <a href="/doc/global/{{ global.name }}">{{ global.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</ul>
