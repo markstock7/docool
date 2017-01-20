@@ -1,5 +1,7 @@
 A frontend document site builder.
 
+I am still working on this. So take your own risk to use it.
+
 ## Installation
 
 ````
