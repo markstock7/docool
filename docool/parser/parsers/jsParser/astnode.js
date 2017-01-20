@@ -5,7 +5,7 @@ var util = require('util'),
     },
 
     utils = {
-        cast: require('utils/cast'),
+        cast: require('docool/parser/utils/cast'),
     };
 
 // Counter for generating unique node IDs.

@@ -5,6 +5,9 @@ var md = require('marked'),
     tocMarkdown,
     hlMarkdown;
 
+md.setOptions({
+    highlight: share.blockcode
+});
 hlRenderer = new md.Renderer();
 hlRenderer.header = share.header;
 hlRenderer.blockcode = share.blockcode;
@@ -29,19 +32,18 @@ exports.render = function(text) {
 tocRenderer = new md.Renderer();
 tocRenderer.header = share.tocHeader;
 tocMarkdown = function(content) {
-  var opt = {
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: true,
-    sanitize: false,
-    smartLists: true,
-    renderer: tocRenderer
-  };
-  return md(content, opt);
+    var opt = {
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: true,
+        sanitize: false,
+        smartLists: true,
+        renderer: tocRenderer
+    };
+    return md(content, opt);
 };
 
 exports.toc = function(text, level) {
     return share.tocRender(text, level, tocMarkdown);
 }
-

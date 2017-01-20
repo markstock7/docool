@@ -63,8 +63,7 @@ Parser.prototype.parse = function(files) {
     this._resultBuffer = [];
 
     files.forEach(file => {
-        var sourceCode = file.sourceCode,
-            filename = file.filename;
+        var sourceCode = file.sourceCode;
 
         event.emit('js::fileParseBegin', {
             file: file
@@ -73,25 +72,26 @@ Parser.prototype.parse = function(files) {
         this.reset();
 
         if (sourceCode.length) {
-            this._parseSourceCode(sourceCode, filename);
+            this._parseSourceCode(sourceCode, file);
         }
 
         event.emit('js::fileParseComplete', {
             doclets: this._fileResultBuffer
         });
+
         this._resultBuffer = this._resultBuffer.concat(this._fileResultBuffer);
     });
     return this._resultBuffer;
 };
 
-Parser.prototype._parseSourceCode = function(sourceCode, sourceName) {
+Parser.prototype._parseSourceCode = function(sourceCode, file) {
     var ast;
 
     sourceCode = pretreat(sourceCode);
-    ast = this.astBuilder.build(sourceCode, sourceName);
+    ast = this.astBuilder.build(sourceCode, file);
 
     if (ast) {
-        this._walkAst(ast, this.visitor, sourceName);
+        this._walkAst(ast, this.visitor, file);
     }
 };
 

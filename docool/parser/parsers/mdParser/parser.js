@@ -1,5 +1,5 @@
 var Promise = require('bluebird'),
-    event = require('../../utils/event'),
+    event = require('docool/parser/utils/event'),
     md = require('./markdown'),
     _ = require('lodash');
 
@@ -30,18 +30,18 @@ var parser = module.exports = {
         return doclets;
     },
     parseContent(content, filename) {
-        var lines = content.split(/\t\n|\r|\n/),
+        var lines = content.split(/\r\n|\r|\n/),
             header = [],
             body = [],
             recording = true,
             doclet = {},
             meta;
         lines.forEach(line => {
-            line = _.trim(line);
+            var _line = _.trim(line);
             if (recording && _.startsWith(line, '---')) {
                 recording = false;
             } else if (recording && _.startsWith(line, '@')) {
-                header.push(line);
+                header.push(_line);
             } else {
                 body.push(line);
             }

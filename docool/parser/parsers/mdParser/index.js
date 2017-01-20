@@ -4,7 +4,6 @@ var Promise = require('bluebird'),
 module.exports = {
     parse: function(files) {
         var doclets = parser.parse(files);
-        // @todo process
         return doclets;
     }
 }

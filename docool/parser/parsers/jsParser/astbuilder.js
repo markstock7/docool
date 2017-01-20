@@ -4,7 +4,7 @@ var espree = require('espree'),
         CommentAttacher: require('./CommentAttacher')
     },
     utils = {
-        logger: require('utils/logger')
+        logger: require('docool/logger')
     };
 
 const VISITOR_CONTINUE = true;
@@ -53,13 +53,13 @@ function scrubComments(comments) {
     return scrubbed;
 }
 
-function parse(source, filename) {
+function parse(source, file) {
     var ast;
 
     try {
         ast = espree.parse(source, parserOptions);
     } catch (e) {
-        utils.logger.error('Unable to parse %s: %s', filename, e.message);
+        utils.logger.error('Unable to parse %s: %s', file.relativePath, e.message);
     }
 
     return ast;
@@ -67,11 +67,11 @@ function parse(source, filename) {
 
 var AstBuilder  = function AstBuilder() {};
 
-AstBuilder.prototype.build = function(source, filename) {
-    var ast = parse(source, filename);
+AstBuilder.prototype.build = function(source, file) {
+    var ast = parse(source, file);
 
     if (ast) {
-        this._postProcess(filename, ast);
+        this._postProcess(file, ast);
     }
 
     return ast;
@@ -82,7 +82,7 @@ AstBuilder.prototype.build = function(source, filename) {
  * @param {string} filename - The full path to the source file.
  * @param {Object} ast - An abstract syntax tree that conforms to the Mozilla Parser API.
  */
-AstBuilder.prototype._postProcess = function(filename, ast) {
+AstBuilder.prototype._postProcess = function(file, ast) {
     var attachComments = !!ast.comments && !!ast.comments.length,
         commentAttacher,
         scrubbed,
@@ -102,7 +102,7 @@ AstBuilder.prototype._postProcess = function(filename, ast) {
 
     walker = new jsParser.Walker();
 
-    walker.recurse(ast, visitor, filename);
+    walker.recurse(ast, visitor, file);
 
     commentAttacher.finish();
 

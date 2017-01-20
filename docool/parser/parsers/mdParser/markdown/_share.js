@@ -4,6 +4,7 @@ var hl = require('./highlight');
 exports.blockcode = function(code, language) {
     var lastChar, hide, inject, html;
 
+    // 没有设置语言
     if (!language || language === '+' || language === '-') {
         return hl.render(code);
     }
@@ -16,34 +17,8 @@ exports.blockcode = function(code, language) {
         language = language.slice(0, -1);
     }
 
-    if (language.slice(0, 6) !== 'iframe') {
-        language = hl.language(language);
-    }
-
-    if (['javascript', 'css', 'html'].indexOf(language) !== -1) {
-        inject = inject && true;
-    }
-
     html = '';
-    // iframe hack
-    if (language && language.slice(0, 6) === 'iframe') {
-        iframeCount++;
-
-        var height = language.split(':')[1];
-        if (height) {
-            height = format('height="%s"', height);
-        } else {
-            height = '';
-        }
-        html = [
-            '<div class="nico-iframe">',
-            '<iframe src="iframe-%s-%d.html" allowtransparency="true" ',
-            'frameborder="0" scrolling="0" %s></iframe></div>'
-        ].join('\n');
-        var iframeId = option.get('iframeId') || '';
-        html = format(html, iframeId, iframeCount, height);
-        language = 'html';
-    } else if (inject) {
+    if (inject) {
         html = {
             'javascript': format('<script>%s</script>', code),
             'css': format('<style type="text/css">%s</style>', code),

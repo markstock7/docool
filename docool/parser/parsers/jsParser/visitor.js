@@ -21,18 +21,18 @@ Visitor.prototype.setParser = function(parser) {
     this._parser = parser;
 };
 
-Visitor.prototype.visit = function(node, filename) {
+Visitor.prototype.visit = function(node, file) {
     var i;
     var l;
 
     for (i = 0, l = this._visitors.length; i < l; i++) {
-        this._visitors[i].call(this, node, this._parser, filename);
+        this._visitors[i].call(this, node, this._parser, file);
     }
 
     return true;
 };
 
-Visitor.prototype.visitNodeComments = function(node, parser, filename) {
+Visitor.prototype.visitNodeComments = function(node, parser, file) {
 
     var commentNodes;
     var commentNode;
@@ -61,7 +61,7 @@ Visitor.prototype.visitNodeComments = function(node, parser, filename) {
     for (var i = 0, l = commentNodes.length; i < l; i++) {
         commentNode = commentNodes[i];
         if (isValidJsdoc(commentNode.raw)) {
-            e = new CommentFound(commentNode, filename);
+            e = new CommentFound(commentNode, file);
 
             // commentFound
             event.emit(e.event, e, parser);
@@ -78,15 +78,11 @@ Visitor.prototype.visitNodeComments = function(node, parser, filename) {
     return true;
 };
 
-Visitor.prototype.visitNode = function(node, parser, filename) {
+Visitor.prototype.visitNode = function(node, parser, file) {
     var i;
     var l;
 
-    var e = this.makeSymbolFoundEvent(node, parser, filename);
-
-    // console.log('_______________________________________');
-    // console.log('.AssignmentExpression', JSON.stringify(e));
-    // console.log('_______________________________________');
+    var e = this.makeSymbolFoundEvent(node, parser, file);
 
     // if (this._nodeVisitors && this._nodeVisitors.length) {
     //     for (i = 0, l = this._nodeVisitors.length; i < l; i++) {
@@ -111,7 +107,7 @@ Visitor.prototype.visitNode = function(node, parser, filename) {
     return true;
 };
 
-Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
+Visitor.prototype.makeSymbolFoundEvent = function(node, parser, file) {
     var e;
     var basename;
     var parent;
@@ -123,7 +119,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
     switch (node.type) {
         // like: i = 0;
         case jsParser.Syntax.AssignmentExpression:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             trackVars(parser, node, e);
 
@@ -140,7 +136,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
 
             if (node.leadingComments && parent && jsParser.astnode.isFunction(parent)) {
                 extras.finishers = [makeInlineParamsFinisher(parser)];
-                e = new SymbolFound(node, filename, extras);
+                e = new SymbolFound(node, file, extras);
 
                 trackVars(parser, node, e);
             }
@@ -151,7 +147,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
         case jsParser.Syntax.ClassDeclaration:
             // like: let MyClass = class {}
         case jsParser.Syntax.ClassExpression:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             trackVars(parser, node, e);
 
@@ -161,7 +157,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
 
             // like: export * from 'foo'
         case jsParser.Syntax.ExportAllDeclaration:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             break;
 
@@ -172,7 +168,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
         case jsParser.Syntax.ExportNamedDeclaration:
             // like `foo as bar` in: export {foo as bar}
         case jsParser.Syntax.ExportSpecifier:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             trackVars(parser, node, e);
 
@@ -180,7 +176,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
 
             // like: export * from 'foo'
         case jsParser.Syntax.ExportAllDeclaration:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             break;
 
@@ -197,7 +193,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
                 makeRestParamFinisher(parser)
             ];
 
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             trackVars(parser, node, e);
 
@@ -216,7 +212,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
             // function parameters with inline comments
             if (node.leadingComments && parent && jsParser.astnode.isFunction(parent)) {
                 extras.finishers = [makeInlineParamsFinisher(parser)];
-                e = new SymbolFound(node, filename, extras);
+                e = new SymbolFound(node, file, extras);
 
                 trackVars(parser, node, e);
             }
@@ -237,13 +233,13 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
                 extras.finishers.push(makeConstructorFinisher(parser));
             }
 
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             break;
 
             // like `{}` in: function Foo = Class.create(/** @lends Foo */ {});
         case jsParser.Syntax.ObjectExpression:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             break;
 
@@ -254,7 +250,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
                 extras.finishers = [parser.resolveEnum];
             }
 
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             break;
 
@@ -264,7 +260,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
 
             if (node.leadingComments && parent && jsParser.astnode.isFunction(parent)) {
                 extras.finishers = [makeInlineParamsFinisher(parser)];
-                e = new SymbolFound(node, filename, extras);
+                e = new SymbolFound(node, file, extras);
 
                 trackVars(parser, node, e);
             }
@@ -273,7 +269,7 @@ Visitor.prototype.makeSymbolFoundEvent = function(node, parser, filename) {
 
             // like: var i = 0;
         case jsParser.Syntax.VariableDeclarator:
-            e = new SymbolFound(node, filename, extras);
+            e = new SymbolFound(node, file, extras);
 
             trackVars(parser, node, e);
 
@@ -327,10 +323,10 @@ function updateCommentNode(commentNode, comment) {
     commentNode.value = removeCommentDelimiters(comment);
 }
 
-function CommentFound(commentNode, filename) {
+function CommentFound(commentNode, file) {
     this.comment = commentNode.raw;
     this.lineno = commentNode.loc.start.line;
-    this.filename = filename;
+    this.file = file;
     this.range = commentNode.range;
 
     Object.defineProperty(this, 'event', {
@@ -338,14 +334,14 @@ function CommentFound(commentNode, filename) {
     });
 }
 
-function SymbolFound(node, filename, extras) {
+function SymbolFound(node, file, extras) {
     extras = extras || {};
     _.defaults(this, {
         id: extras.id || node.nodeId,
         comment: extras.comment || getLeadingComment(node) || '@undocumented',
         lineno: extras.lineno || node.loc.start.line,
         range: extras.range || node.range,
-        filename: extras.filename || filename,
+        file: extras.file || file,
         astnode: extras.astnode || node,
         code: extras.code,
         event: extras.event || 'symbolFound',

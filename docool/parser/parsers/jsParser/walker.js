@@ -512,10 +512,10 @@ var Walker = module.exports = function(walkerFuncs) {
     this._walkers = walkerFuncs || walkers;
 };
 
-Walker.prototype._recurse = function(filename, ast) {
+Walker.prototype._recurse = function(file, ast) {
     var self = this;
     var state = {
-        filename: filename,
+        file: file,
         nodes: [],
         scopes: []
     };
@@ -550,12 +550,12 @@ Walker.prototype._recurse = function(filename, ast) {
     return state;
 };
 
-Walker.prototype.recurse = function(ast, visitor, filename) {
+Walker.prototype.recurse = function(ast, visitor, file) {
     var shouldContinue;
-    var state = this._recurse(filename, ast);
+    var state = this._recurse(file, ast);
     if (visitor) {
         for (var i = 0, l = state.nodes.length; i < l; i++) {
-            shouldContinue = visitor.visit.call(visitor, state.nodes[i], filename);
+            shouldContinue = visitor.visit.call(visitor, state.nodes[i], file);
             if (!shouldContinue) {
                 break;
             }
