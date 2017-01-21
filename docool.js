@@ -37,7 +37,6 @@
         through             = require('through2'),
         chalk               = require('chalk'),
         gutil               = require('gulp-util'),
-        watch               = require('gulp-watch'),
         _                   = require('lodash'),
         gulpLoadPlugins     = require('gulp-load-plugins'),
         logger              = require('./docool/logger'),
