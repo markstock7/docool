@@ -1,3 +1,5 @@
+#!/usr/bin/env babel-node
+
 (function() {
     'use strict';
 
