@@ -6,7 +6,7 @@
   "author": "markstock7",
   "license": "ISC",
   "bin": {
-    "elephant": "node docool.js"
+    "docool": "./docool.js"
   },
   "repository": {
     "type": "git",

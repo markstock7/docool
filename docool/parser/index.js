@@ -17,8 +17,10 @@ function Parser(options) {
 Parser.prototype.processDoclets = function processDoclets(doclets) {
     var docletMap = {};
     doclets.forEach((doclet => {
-        var key = (doclet.kind || '') + '|' + (doclet.name || '');
-        docletMap[key] = Object.assign(docletMap[key] || {}, doclet);
+        if (doclet) {
+            var key = (doclet.kind || '') + '|' + (doclet.name || '');
+            docletMap[key] = Object.assign(docletMap[key] || {}, doclet);
+        }
     }));
     doclets = _.values(docletMap);
     return doclets;
