@@ -10,7 +10,7 @@ md.setOptions({
 });
 hlRenderer = new md.Renderer();
 hlRenderer.header = share.header;
-hlRenderer.blockcode = share.blockcode;
+hlRenderer.code = share.code;
 hlMarkdown = function(content) {
     var opt = {
         gfm: true,

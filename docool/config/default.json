@@ -3,5 +3,9 @@
 
     "gulpSrc": [],
 
-    "plugins": ["react.plugin.js", "logger.js"]
+    "plugins": [
+        "react.plugin.js",
+        "doclets.plugin.js",
+        "logger.plugin.js"
+    ]
 }

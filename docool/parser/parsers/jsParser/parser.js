@@ -1,6 +1,4 @@
-var events = require('events'),
-    util = require('util'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     cloneDeep = require('lodash').cloneDeep,
     jsParser = {
         Syntax: require('./syntax'),

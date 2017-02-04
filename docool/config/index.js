@@ -31,9 +31,4 @@ nconf.env({
     separator: ':'
 });
 
-/**
- * 当前项目所在的目录
- */
-nconf.set('__PROJECT_PATH__', process.cwd());
-
 module.exports = nconf;

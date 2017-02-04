@@ -1,8 +1,7 @@
 #!/usr/bin/env babel-node
+'use strict';
 
 (function() {
-    'use strict';
-
     var path = require('path');
     require = require('requizzle')({
         requirePaths: {
@@ -57,7 +56,7 @@
     }
 
     parser = new Parser(_.pick(config.get(), [
-        '__PROJECT_PATH__',
+        'PWD',
         'plugins'
     ]));
 

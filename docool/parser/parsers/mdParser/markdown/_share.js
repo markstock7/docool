@@ -1,36 +1,59 @@
-var format = require('util').format;
-var hl = require('./highlight');
+var format = require('util').format,
+    hl = require('./highlight'),
+    event = require('docool/parser/utils/event'),
+    iframeCount = 0;
 
-exports.blockcode = function(code, language) {
-    var lastChar, hide, inject, html;
+function codeTagWrapper(code) {
+    return `<pre><code>${code}</code></pre>`;
+}
+
+exports.header = function(text, level) {
+    var id = encode.uri(text);
+    return format('<h%d id="%s">%s</h%d>', level, id, text, level);
+};
+
+exports.code = function(code, language) {
+    var firstChar, hide, inject, html = '', e = {
+        originCode: code,
+        code
+    };
 
     // 没有设置语言
     if (!language || language === '+' || language === '-') {
-        return hl.render(code);
+        return codeTagWrapper(hl.render(code));
     }
 
-    lastChar = language.slice(-1);
-    hide = lastChar === '-';
-    inject = (lastChar === '-' || lastChar === '+');
+    firstChar = language.slice(-1);
+    hide = firstChar === '-';
+    inject = (firstChar === '-' || firstChar === '+');
 
     if (inject) {
-        language = language.slice(0, -1);
+        e.language = language = language.slice(0, -1);
     }
 
-    html = '';
+    console.log('language', language, e.code);
+    e.highlightCode = codeTagWrapper(hl.render(e.code, language));
+
     if (inject) {
-        html = {
-            'javascript': format('<script>%s</script>', code),
-            'css': format('<style type="text/css">%s</style>', code),
-            'html': format('<div class="nico-insert-code">%s</div>', code)
-        }[language];
+
+        event.emit('md::injectCode', e);
+
+        if (!e.preventDefault) {
+            html = {
+                'js': format('<script>%s</script>', e.code),
+                'css': format('<style type="text/css">%s</style>', e.code),
+                'html': format('<div class="docool-inject-html">%s</div>', e.code)
+            }[language];
+
+            if (hide) {
+                return html;
+            }
+            return `${html}${e.highlightCode}`;
+        }
+        return '';
     }
 
-    if (hide && inject) {
-        return html;
-    }
-
-    return html + hl.render(code, language);
+    return e.highlightCode;
 }
 
 exports.normalRender = function(text, fn) {
@@ -41,10 +64,7 @@ exports.normalRender = function(text, fn) {
     return fn(text);
 };
 
-exports.header = function(text, level) {
-    var id = encode.uri(text);
-    return format('<h%d id="%s">%s</h%d>', level, id, text, level);
-};
+
 
 var toc = [];
 var tocLevel = 3;

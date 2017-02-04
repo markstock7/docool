@@ -1,5 +1,6 @@
-var format = require('util').format;
-var hl = require('highlight.js');
+var format = require('util').format,
+    hl = require('highlight.js'),
+    iframeCount = 0;
 
 var escape = function(html) {
     return html

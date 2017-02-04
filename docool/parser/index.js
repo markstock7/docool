@@ -45,6 +45,7 @@ Parser.prototype.parse = function parse(files) {
                 break;
         }
     });
+    event.emit('filesParseBegin');
 
     if (fileMap.js.length) {
         doclets = doclets.concat(jsParser.parse(fileMap.js));
@@ -53,6 +54,8 @@ Parser.prototype.parse = function parse(files) {
     if (fileMap.md.length) {
         doclets = doclets.concat(mdParser.parse(fileMap.md));
     }
+
+    event.emit('filesParseComplete');
 
     logger.info(`Total parse %d files. \n    - javascript files: %d\n    - markdown files: %d`, files.length, fileMap.js.length, fileMap.md.length);
 
@@ -63,11 +66,11 @@ Parser.prototype.parse = function parse(files) {
 
 
 Parser.prototype.installPlugins = function installPlugins(plugins) {
+    var pluginPath;
     if (_.isArray(plugins)) {
         plugins.forEach(plugin => {
-            var pluginPath;
             if (plugin.indexOf('/') > -1) {
-                pluginPath = path.resolve(this.options.__PROJECT_PATH__, plugin);
+                pluginPath = path.resolve(this.options.PWD, plugin);
             } else {
                 pluginPath = path.resolve(__dirname, './plugins', plugin);
             }
@@ -79,6 +82,8 @@ Parser.prototype.installPlugins = function installPlugins(plugins) {
                         event.on(eventName, plugin.handlers[eventName]);
                     });
                 }
+            } else {
+                logger.warn(`plugin ${plugin} not exists in path ${pluginPath}`);
             }
         });
     }

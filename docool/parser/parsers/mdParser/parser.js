@@ -13,18 +13,21 @@ var parser = module.exports = {
                 filename = file.filename,
                 doclet;
 
-            event.emit('md::fileParseBegin', {
-                file: file
-            });
-
             if (sourceCode.length) {
-                doclet = parser.parseContent(sourceCode, filename);
-            }
+                event.emit('md::fileParseBegin', {
+                    file: file
+                });
 
-            event.emit('md::fileParseComplete', {
-                doclet: doclet
-            });
-            doclets.push(doclet);
+
+                doclet = parser.parseContent(sourceCode, filename);
+
+
+                event.emit('md::fileParseComplete', {
+                    doclet: doclet
+                });
+
+                doclets.push(doclet);
+            }
         });
 
         return doclets;
@@ -40,7 +43,7 @@ var parser = module.exports = {
             var _line = _.trim(line);
             if (recording && _.startsWith(line, '---')) {
                 recording = false;
-            } else if (recording && _.startsWith(line, '@')) {
+            } else if (recording && _.startsWith(line, '!@')) {
                 header.push(_line);
             } else {
                 body.push(line);
@@ -63,7 +66,7 @@ var parser = module.exports = {
     parseMeta(tags) {
         var meta = {};
         tags.forEach(tag => {
-            var result = /^@(\S*)\s*(.*)/.exec(tag);
+            var result = /^!@(\S*)\s*(.*)/.exec(tag);
             if (result) {
                 meta[result[1]] = result[2];
             }

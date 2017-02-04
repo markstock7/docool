@@ -25,9 +25,14 @@ function buildComponentPropTypes(componentDoclet, docletDb) {
             if (propTypes.length) {
                 docletDb({ memberof: longname }).remove();
             }
+        } else if (propTypes.meta.code.type === 'ObjectExpression') {
+            propTypes = docletDb({ memberof: longname }).get();
+            if (propTypes.length) {
+                docletDb({ memberof: longname }).remove();
+            }
         }
 
-         propTypes.forEach(propType => {
+        propTypes.forEach(propType => {
             if (!props[propType.name]) {
                 props[propType.name] = { name: propType.name };
             }
@@ -76,8 +81,6 @@ function buildComponentPropsDefault(componentDoclet, docletDb) {
  * 从 defaultProps 中 为 props 解析出默认值
  */
 exports.handlers = {
-    'js::symbolFound': function(e) {},
-    'js::fileParseBegin': function(e) {},
     'js::fileParseComplete': function(e) {
         var doclets = e.doclets,
             docletDb = taffydb.taffy(doclets.slice(0)),
