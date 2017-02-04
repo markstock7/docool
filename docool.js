@@ -32,7 +32,6 @@
 (function() {
     var path                = require('path'),
         Promise             = require('bluebird'),
-        debug               = require('debug')('🐘'),
         gulp                = require('gulp'),
         runSequence         = require('run-sequence'),
         through             = require('through2'),
