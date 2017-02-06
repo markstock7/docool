@@ -71,7 +71,7 @@
                         base: file.cwd,
                         path: file.path,
                         relativePath: file.path.substr(file.cwd.length),
-                        sourceCode: file.contents.toString()
+                        sourceCode: file.contents ? file.contents.toString() : ''
                     });
                     cb(null);
                 }))

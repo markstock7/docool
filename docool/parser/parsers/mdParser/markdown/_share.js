@@ -24,14 +24,13 @@ exports.code = function(code, language) {
     }
 
     firstChar = language.slice(-1);
-    hide = firstChar === '-';
-    inject = (firstChar === '-' || firstChar === '+');
+    e.hide = hide = firstChar === '-';
+    e.inject = inject = (firstChar === '-' || firstChar === '+');
 
     if (inject) {
         e.language = language = language.slice(0, -1);
     }
 
-    console.log('language', language, e.code);
     e.highlightCode = codeTagWrapper(hl.render(e.code, language));
 
     if (inject) {

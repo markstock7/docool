@@ -33,13 +33,15 @@ function buildComponentPropTypes(componentDoclet, docletDb) {
         }
 
         propTypes.forEach(propType => {
-            if (!props[propType.name]) {
+            var prop = props[propType.name];
+            if (!prop) {
                 props[propType.name] = { name: propType.name };
+                prop = props[propType.name];
             }
 
-            props[propType.name].type = getPropsType(propType.meta.code.value);
-            props[propType.name].required = isPropsRequired(propType.meta.code.value);
-            props[propType.name].description = propType.description || '';
+            prop.type = propType.type ? propType.type.names.join(' / ') : getPropsType(propType.meta.code.value);
+            prop.required = isPropsRequired(propType.meta.code.value);
+            prop.description = propType.description || '';
         });
     }
 
