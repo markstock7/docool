@@ -56,30 +56,29 @@ Parser.prototype.reset = function() {
     });
 };
 
-Parser.prototype.parse = function(files) {
-    files = files || [];
+Parser.prototype.parse = function(file) {
     this._resultBuffer = [];
 
-    files.forEach(file => {
-        var sourceCode = file.sourceCode;
+    var sourceCode = file.sourceCode;
 
-        event.emit('js::fileParseBegin', {
-            file: file
-        });
-
-        this.reset();
-
-        if (sourceCode.length) {
-            this._parseSourceCode(sourceCode, file);
-        }
-
-        event.emit('js::fileParseComplete', {
-            doclets: this._fileResultBuffer
-        });
-
-        this._resultBuffer = this._resultBuffer.concat(this._fileResultBuffer);
+    event.emit('js::fileParseBegin', {
+        file: file
     });
-    return this._resultBuffer;
+
+    this.reset();
+
+    if (sourceCode.length) {
+        this._parseSourceCode(sourceCode, file);
+    }
+
+    event.emit('js::fileParseComplete', {
+        doclets: this._fileResultBuffer
+    });
+
+    // this._resultBuffer = this._resultBuffer.concat(this._fileResultBuffer);
+    // return this._resultBuffer;
+
+    return this._fileResultBuffer;
 };
 
 Parser.prototype._parseSourceCode = function(sourceCode, file) {

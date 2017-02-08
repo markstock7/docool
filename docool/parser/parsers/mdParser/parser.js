@@ -4,31 +4,26 @@ var Promise = require('bluebird'),
     _ = require('lodash');
 
 var parser = module.exports = {
-    parse: function(files) {
+    parse: function(file) {
         var doclets = [];
-        files = files || [];
 
-        files.forEach(file => {
-            var sourceCode = file.sourceCode,
-                filename = file.filename,
-                doclet;
+        var sourceCode = file.sourceCode,
+            filename = file.filename,
+            doclet;
 
-            if (sourceCode.length) {
-                event.emit('md::fileParseBegin', {
-                    file: file
-                });
+        if (sourceCode.length) {
+            event.emit('md::fileParseBegin', {
+                file: file
+            });
 
+            doclet = parser.parseContent(sourceCode, filename);
 
-                doclet = parser.parseContent(sourceCode, filename);
+            event.emit('md::fileParseComplete', {
+                doclet: doclet
+            });
 
-
-                event.emit('md::fileParseComplete', {
-                    doclet: doclet
-                });
-
-                doclets.push(doclet);
-            }
-        });
+            doclets.push(doclet);
+        }
 
         return doclets;
     },
@@ -56,7 +51,7 @@ var parser = module.exports = {
 
         try {
             doclet.html = md.render(body.join('\n'));
-        } catch(e) {
+        } catch (e) {
             console.error(e.message.split(/\r\n|\r|\n/)[0]);
         }
 

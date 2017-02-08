@@ -33,11 +33,13 @@
     var path                = require('path'),
         Promise             = require('bluebird'),
         gulp                = require('gulp'),
+        watch               = require('gulp-watch'),
         runSequence         = require('run-sequence'),
         through             = require('through2'),
         chalk               = require('chalk'),
         gutil               = require('gulp-util'),
         _                   = require('lodash'),
+        globby              = require('globby'),
         gulpLoadPlugins     = require('gulp-load-plugins'),
         logger              = require('./docool/logger'),
         Parser              = require('./docool/parser'),
@@ -54,77 +56,61 @@
         logger.warn('Did not provide template server, using the default template server.')
     }
 
-    parser = new Parser(_.pick(config.get(), [
-        'PWD',
-        'plugins'
-    ]));
+    parser = new Parser({
+        plugins: config.get('plugins') || [],
+        cwd: config.get('PWD'),
+        // 启用parser自带的cache模式
+        cache: true
+    });
 
     server = new Server(config.get('server'));
 
     function getFileResouce() {
-        var files = [];
-        return new Promise(function(resolve, reject) {
-            return gulp.src(config.get('gulpSrc'))
-                .pipe(through.obj((file, enc, cb) => {
-                    files.push({
-                        filename: path.basename(file.path),
-                        base: file.cwd,
-                        path: file.path,
-                        relativePath: file.path.substr(file.cwd.length),
-                        sourceCode: file.contents ? file.contents.toString() : ''
-                    });
-                    cb(null);
-                }))
-                .on('finish', () => {
-                    resolve(files)
-                })
-                .on('error', (error) => {
-                    throw error;
-                });
+        return globby(config.get('globs'), {
+            absolute: true
         });
     }
 
-    gulp.task('watch', () => {
+    function enableWatch() {
         if (config.get('hot')) {
-
-            logger.info('Enable hot reload.');
-
-            // Start livereload
             plugins.livereload.listen();
-
-            config.get('gulpSrc').forEach(src => {
-                if (!_.startsWith(src, '!')) {
-                    gulp.watch(src, ['parse']).on('change', plugins.livereload.changed);
+            config.get('globs').forEach(glob => {
+                if (!_.startsWith(glob, '!')) {
+                    watch(glob).on('change', function(changedFile) {
+                        parseFiles(changedFile);
+                        plugins.livereload.changed.apply(null, arguments);
+                    });
                 }
             });
         }
-    });
+    }
 
-    gulp.task('parse', (done) => {
-        getFileResouce()
-            .then(parser.parse.bind(parser))
+    function parseFiles(files) {
+        return parser.parseFiles(files)
             .then(doclets => {
                 template.loadDoclets(doclets);
-                done();
             });
-    });
+    }
 
-    gulp.task('server', done => {
-        server.start();
-        template.init({
-            server: server.getAppInstance()
+    function initServer() {
+        return new Promise((resolve, reject) => {
+            server.start();
+            template.init({
+                server: server.getAppInstance()
+            });
+            resolve();
         });
-        done();
-    });
+    }
 
-    gulp.task('start', function(done) {
-        runSequence(
-            'parse',
-            'server',
-            'watch',
-            done
-        );
-    });
+    function boot() {
+        return getFileResouce()
+            .then(parseFiles)
+            .then(initServer)
+            .then(enableWatch)
+            .catch(e => {
+                console.log(e);
+            });
+    }
 
-    gulp.start('start');
+    boot();
 })();

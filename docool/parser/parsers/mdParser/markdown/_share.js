@@ -24,7 +24,7 @@ exports.code = function(code, language) {
     }
 
     firstChar = language.slice(-1);
-    e.hide = hide = firstChar === '-';
+    e.hide = hide = (firstChar === '-');
     e.inject = inject = (firstChar === '-' || firstChar === '+');
 
     if (inject) {

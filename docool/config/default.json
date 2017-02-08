@@ -1,7 +1,7 @@
 {
     "demoGulpSrc": ["examples/**/*.jsx", "examples/**/*.md", "!**/node_modules/**"],
 
-    "gulpSrc": [],
+    "globs": [],
 
     "plugins": [
         "react.plugin.js",

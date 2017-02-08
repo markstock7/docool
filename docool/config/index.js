@@ -16,7 +16,7 @@ try {
         customConfig = JSON.parse(customConfig);
 
         customConfig.plugins = _.concat(defaultConfig.plugins, customConfig.plugins || []);
-        customConfig.gulpSrc = _.concat(defaultConfig.gulpSrc, customConfig.gulpSrc || []);
+        customConfig.globs = _.concat(defaultConfig.globs, customConfig.globs || []);
     }
     nconf.overrides(customConfig);
 } catch (e) {

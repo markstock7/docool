@@ -4,9 +4,11 @@ var Parser = require('./parser'),
     parser = new Parser(),
     docletDb = new DocletDb();
 
-module.exports = {
-    parse: function(files) {
-        var doclets = parser.parse(files);
-        return docletDb.clearBuffer().insert(doclets).processDoclets().getProcessedDoclets();
-    }
-}
+// module.exports = {
+//     parse: function(files) {
+//         var doclets = parser.parse(files);
+//         return docletDb.clearBuffer().insert(doclets).processDoclets().getProcessedDoclets();
+//     }
+// }
+
+module.exports = parser;
