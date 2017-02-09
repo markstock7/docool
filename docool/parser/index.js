@@ -14,7 +14,6 @@ var mime        = require('mime'),
     _           = require('lodash'),
     hash        = require('hasha'),
     logger      = require('docool/logger'),
-    fileUtil    = require('./utils/file'),
     event       = require('./utils/event'),
     jsParser    = require('./parsers/jsParser'),
     mdParser    = require('./parsers/mdParser');
@@ -115,7 +114,7 @@ Parser.prototype.installPlugins = function installPlugins(plugins) {
             } else {
                 pluginPath = path.resolve(__dirname, './plugins', plugin);
             }
-            if (fileUtil.exists(pluginPath)) {
+            if (fs.existsSync(pluginPath)) {
                 plugin = require(pluginPath);
 
                 if (plugin.handlers) {
