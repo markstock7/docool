@@ -1,8 +1,8 @@
 var _ = require('lodash'),
     elephant = {
-        name: require('../../name'),
+        name: require('docool/parser/utils/name'),
         tag: {
-            dictionary: require('../../tag/dictionary')
+            dictionary: require('docool/parser/parsers/jsParser/tag/dictionary')
         }
     },
     MODULE_NAMESPACE = 'module:',
@@ -34,17 +34,17 @@ function stringifyType(parsedType, cssClass, stringifyLinkMap) {
     });
 }
 
-var find  = exports.find = function find(data, spec) {
+function find(data, spec) {
     return data(spec).get();
 };
 
-var prune = exports.prune = function prune(doclets) {
+function prune(doclets) {
     return doclets.filter(function(doclet) {
         return !doclet.undocumented && !doclet.ignore && doclet.memberof !== '<anonymous>';
     });
 }
 
-var indexAll = exports.indexAll = function indexAll(doclets) {
+function indexAll(doclets) {
     var doclet;
     var documented = {};
     var borrowed = {};
@@ -78,9 +78,11 @@ var indexAll = exports.indexAll = function indexAll(doclets) {
         documented: documented,
         longname: longname
     };
+
+    return doclets
 };
 
-var getMembers = exports.getMembers = function getMembers(data) {
+function getMembers(data) {
     /**
      * @todo make it more Scalable
      * @type {Object}
@@ -123,7 +125,7 @@ var getMembers = exports.getMembers = function getMembers(data) {
     return members;
 };
 
-var generateDocletTree = exports.generateDocletTree = function generateDocletTree(data) {
+function generateDocletTree(data) {
     var tree = {
         module: {},
         global: {}
@@ -174,8 +176,7 @@ var generateDocletTree = exports.generateDocletTree = function generateDocletTre
     return tree;
 };
 
-
-var graft = exports.graft = function graft(parentNode, childNodes, parentLongname, parentName) {
+function graft(parentNode, childNodes, parentLongname, parentName) {
     childNodes
         .filter(function(element) {
             return (element.memberof === parentLongname);
@@ -353,5 +354,27 @@ var graft = exports.graft = function graft(parentNode, childNodes, parentLongnam
         });
 }
 
-exports.borrow = require('./borrow');
-exports.augment = require('./augment');
+// 将md 产生的文档和js产生的文档合并在一起
+function mergeDoclets(doclets) {
+    var docletMap = {};
+    doclets.forEach(doclet => {
+        if (doclet) {
+            var key = (doclet.kind || '') + '|' + (doclet.name || '');
+            docletMap[key] = Object.assign(docletMap[key] || {}, doclet);
+        }
+    });
+    doclets = _.values(docletMap);
+    return doclets;
+};
+
+module.exports = {
+    prune,
+    indexAll,
+    getMembers,
+    generateDocletTree,
+    mergeDoclets,
+    graft,
+    find,
+    borrow: require('./borrow'),
+    augment: require('./augment')
+};

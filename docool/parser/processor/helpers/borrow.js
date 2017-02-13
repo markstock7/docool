@@ -1,4 +1,4 @@
-var SCOPE = require('../../name').SCOPE,
+var SCOPE = require('docool/parser/utils/name').SCOPE,
     _ = require('lodash'),
     hasOwnProp = Object.prototype.hasOwnProperty;
 
@@ -55,4 +55,6 @@ exports.resolveBorrows = function(doclets) {
     }
 
     doclets.index.borrowed = [];
+
+    return doclets;
 };

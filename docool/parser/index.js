@@ -17,6 +17,7 @@ var mime        = require('mime'),
     event       = require('./utils/event'),
     jsParser    = require('./parsers/jsParser'),
     mdParser    = require('./parsers/mdParser');
+    processor   = require('docool/parser/processor');
 
 /**
  * @class
@@ -30,18 +31,6 @@ function Parser(options) {
 
     event.emit('parserInit');
 }
-
-Parser.prototype.processDoclets = function processDoclets(doclets) {
-    var docletMap = {};
-    doclets.forEach(doclet => {
-        if (doclet) {
-            var key = (doclet.kind || '') + '|' + (doclet.name || '');
-            docletMap[key] = Object.assign(docletMap[key] || {}, doclet);
-        }
-    });
-    doclets = _.values(docletMap);
-    return doclets;
-};
 
 /**
  * @param  {string[]} files 要解析的文件的路径列表
@@ -66,9 +55,7 @@ Parser.prototype.parseFiles = function parseFiles(files) {
 
     logger.info(`Total parse %d files.`, files.length);
 
-    doclets = this.processDoclets(doclets);
-
-    return Promise.resolve(doclets);
+    return Promise.resolve(processor(doclets));
 };
 
 /**

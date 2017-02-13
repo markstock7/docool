@@ -1,4 +1,4 @@
-var name = require('../../name'),
+var name = require('docool/parser/utils/name'),
     _ = require('lodash'),
     hasOwnProp = Object.prototype.hasOwnProperty;
 
@@ -534,4 +534,6 @@ exports.augmentAll = function(doclets) {
     exports.addInherited(doclets);
     // look for implemented doclets again, in case we inherited an interface
     exports.addImplemented(doclets);
+
+    return doclets;
 };

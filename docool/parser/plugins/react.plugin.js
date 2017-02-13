@@ -105,5 +105,49 @@ exports.handlers = {
         docletDb().get().forEach(doclet => {
             doclets.push(doclet);
         });
+    },
+
+    docletsProcessComplete: function(e) {
+        var doclets = e.doclets.slice(0),
+            componentDoclets = [],
+            components = {},
+            memberCompoents = [];
+
+        e.doclets.length = 0;
+
+
+        doclets.forEach(doclet => {
+            if (doclet.kind === 'component') {
+                componentDoclets.push(doclet);
+            } else {
+                e.doclets.push(doclet);
+            }
+        });
+
+        componentDoclets.forEach(doclet => {
+            // if (doclet.name === 'CollapseList') {
+            //     console.log(JSON.stringify(doclet));
+            // }
+            if (doclet.memberof) {
+                memberCompoents.push(doclet);
+            } else {
+                components[doclet.name] = doclet;
+            }
+        });
+
+        memberCompoents.forEach(doclet => {
+            if (components[doclet.memberof]) {
+                var component = components[doclet.memberof];
+                component.memberCompoents = component.memberCompoents || [];
+                component.memberCompoents.push(doclet);
+            }
+        });
+
+        console.log(JSON.stringify(components));
+        _.values(components).forEach(doclet => {
+            // console.log(doclet);
+            // console.log('\n');
+            e.doclets.push(doclet);
+        })
     }
 };
